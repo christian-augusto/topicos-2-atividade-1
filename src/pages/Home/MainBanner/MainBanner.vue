@@ -52,6 +52,7 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/lazy";
 
+import "./MainBanner.scss";
 import translations from "./translations";
 
 export default defineComponent({
@@ -71,5 +72,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style src="./MainBanner.scss" lang="scss"></style>

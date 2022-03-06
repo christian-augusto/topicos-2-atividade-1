@@ -22,7 +22,9 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+
 import translations from "./translations";
+import "./Header.scss";
 
 export default defineComponent({
   data() {

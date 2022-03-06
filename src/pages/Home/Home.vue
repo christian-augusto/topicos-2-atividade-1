@@ -14,5 +14,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style src="./Home.scss" lang="scss"></style>
