@@ -1,0 +1,69 @@
+@mixin mqmax($max) {
+  @media only screen and (max-width: $max) {
+    @content;
+  }
+}
+
+@mixin mqmin($min) {
+  @media only screen and (min-width: $min) {
+    @content;
+  }
+}
+
+@mixin mq($min, $max) {
+  @media only screen and (min-width: $min) and (max-width: $max) {
+    @content;
+  }
+}
+
+@mixin mq-desktop-regular {
+  @media only screen and (min-width: 1280px) { @content; }
+}
+
+@mixin flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// Compatibility
+@mixin placeholder-style() {
+  &::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    @content;
+  }
+
+  &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    @content;
+  }
+
+  &::-moz-placeholder { /* Mozilla Firefox 19+ */
+    @content;
+  }
+
+  &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    @content;
+  }
+
+  &::-ms-input-placeholder { /* Microsoft Edge */
+    @content;
+  }
+}
+
+@mixin transform($property) {
+  -webkit-transform: $property;
+  -ms-transform: $property;
+  -o-transform: $property;
+  transform: $property;
+}
+
+@mixin transition($property) {
+  -webkit-transition: #{$property};
+  -moz-transition: #{$property};
+  -ms-transition: #{$property};
+  -o-transition: #{$property};
+  transition: #{$property}; 
+}

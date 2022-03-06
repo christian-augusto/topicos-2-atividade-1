@@ -1,0 +1,61 @@
+.main-banner {
+  width: 100%;
+  height: auto;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+
+  &__carousel {
+    width: 100%;
+    height: auto;
+    position: relative;
+    box-sizing: border-box;
+    padding: 0 50px;
+    z-index: 1;
+
+    &-wrapper {
+      z-index: 1;
+    }
+
+    .banner {
+      &:not(.swiper-lazy-loaded) {
+        min-width: 565px;
+        min-height: 317px;
+        background: url("~@/assets/images/loader.gif");
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+    }
+
+    .swiper-button-prev,
+    .swiper-button-next {
+      position: absolute;
+      top: 50%;
+      width: 20px;
+      height: 20px;
+      display: block;
+      z-index: 2;
+      cursor: pointer;
+      border: solid black;
+      border-width: 0 3px 3px 0;
+      display: inline-block;
+      padding: 3px;
+
+      &.swiper-button-disabled {
+        display: none;
+      }
+    }
+
+    .swiper-button-prev {
+      left: 10px;
+      @include transform(translateY(-50%) rotate(135deg));
+    }
+
+    .swiper-button-next {
+      right: 10px;
+      @include transform(translateY(-50%) rotate(-45deg));
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "presets": [
+    "@vue/cli-plugin-babel/preset",
+    "minify"
+  ],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "root": ["."],
+        "alias": {
+          "@": "./src",
+          "@components": "./src/components",
+          "@views": "./src/views",
+          "@styles": "./src/styles",
+          "@assets": "./src/assets",
+          "@interfaces": "./src/interfaces",
+          "@utils": "./src/utils"
+        }
+      }
+    ]
+  ]
+}

@@ -1,0 +1,52 @@
+@include mq-desktop-regular {
+  .header {
+    &__top {
+      @include flex-row;
+      align-items: center;
+      box-sizing: border-box;
+      padding: 20px 40px;
+    }
+
+    &__logo {
+      width: 100px;
+      height: auto;
+
+      &-img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      > a {
+        display: block;
+        width: 100%;
+        height: auto;
+        cursor: pointer;
+      }
+    }
+
+    &__navigation {
+      > ul {
+        margin: 0 0 0 20px;
+
+        > li {
+          margin: 0 0 0 15px;
+
+          a {
+            font-family: $default-font;
+            font-size: 15px;
+            font-weight: 400;
+            color: #000;
+            text-transform: unset;
+            text-decoration: none;
+            cursor: pointer;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+  }
+}
