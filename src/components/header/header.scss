@@ -1,7 +1,7 @@
 @include mq-desktop-regular {
   .header {
     &__top {
-      @include flex-row;
+      flex-direction: row;
       align-items: center;
       box-sizing: border-box;
       padding: 20px 40px;

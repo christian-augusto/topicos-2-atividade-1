@@ -20,14 +20,10 @@
   @media only screen and (min-width: 1280px) { @content; }
 }
 
-@mixin flex-row {
-  display: flex;
-  flex-direction: row;
-}
-
-@mixin flex-column {
-  display: flex;
-  flex-direction: column;
+@mixin remove-appearance {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 // Compatibility
