@@ -4,13 +4,12 @@
   </main>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script>
 import vMainBanner from "./main-banner/main-banner.vue";
 
-export default defineComponent({
+export default {
   components: {
     vMainBanner,
   },
-});
+};
 </script>

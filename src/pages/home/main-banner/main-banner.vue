@@ -45,8 +45,7 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script>
 import { Lazy, Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
@@ -55,7 +54,7 @@ import "swiper/css/lazy";
 import translations from "./translations";
 import "./main-banner.scss";
 
-export default defineComponent({
+export default {
   components: {
     Swiper,
     SwiperSlide,
@@ -70,5 +69,5 @@ export default defineComponent({
       modules: [Lazy, Navigation],
     };
   },
-});
+};
 </script>

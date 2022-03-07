@@ -3,9 +3,11 @@
   <router-view />
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from "vue";
+
 import vHeader from "@components/header/header.vue";
+import "./app.scss";
 
 export default defineComponent({
   components: {
@@ -13,5 +15,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style src="./App.scss" lang="scss"></style>

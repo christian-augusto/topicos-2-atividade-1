@@ -6,10 +6,10 @@
         <input
           type="text"
           id="name-input"
+          autocomplete="nope"
+          required="required"
           :placeholder="translations['nameInputPlaceholder']"
           @change="nameInputOnChange"
-          required="required"
-          autocomplete="nope"
         />
       </div>
       <div class="form__field flex">
@@ -17,11 +17,12 @@
         <input
           type="text"
           id="birthDate-input"
-          required="required"
           autocomplete="nope"
+          minlength="10"
+          required="required"
           :placeholder="translations['birthDateInputPlaceholder']"
-          v-imask="birthDateMask"
           @change="birthDateInputOnChange"
+          v-imask="birthDateMask"
         />
       </div>
       <div class="form__field flex">
@@ -38,10 +39,12 @@
         <input
           type="text"
           id="cpf-input"
+          autocomplete="nope"
+          minlength="14"
+          required="required"
           :placeholder="translations['cpfInputPlaceholder']"
           @change="cpfInputOnChange"
-          required="required"
-          autocomplete="nope"
+          v-imask="cpfMask"
         />
       </div>
       <div class="form__field flex">
@@ -108,18 +111,14 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { IMaskComponent } from "vue-imask";
+<script>
+import { IMaskDirective } from "vue-imask";
 
 import translations from "./translations";
-import State from "./interfaces/state";
-import City from "./interfaces/city";
-import RegisterForm from "./interfaces/register-form";
 import { getStates, getStateCities } from "./requests";
 import "./register-form.scss";
 
-function getStateIdBySigla(sigla: string, states: Array<State>): number {
+function getStateIdBySigla(sigla, states) {
   for (let i = 0; i < states.length; i++) {
     if (states[i].sigla == sigla) {
       return states[i].id;
@@ -129,16 +128,16 @@ function getStateIdBySigla(sigla: string, states: Array<State>): number {
   return -1;
 }
 
-export default defineComponent({
+export default {
   data() {
     return {
       name: "",
       birthDate: "",
       birthDateMask: {
-        mask: Date,
-        min: new Date(1900, 0, 1),
-        max: new Date(),
-        lazy: false,
+        mask: "00/00/0000",
+      },
+      cpfMask: {
+        mask: "000.000.000-00",
       },
       gender: "",
       cpf: "",
@@ -149,13 +148,10 @@ export default defineComponent({
       city: "",
 
       translations,
-      states: new Array<State>(),
+      states: [],
       stateId: -1,
-      cities: new Array<City>(),
+      cities: [],
     };
-  },
-  components: {
-    "imask-input": IMaskComponent,
   },
   watch: {
     state() {
@@ -172,54 +168,36 @@ export default defineComponent({
     async setCities() {
       this.cities = await getStateCities(this.stateId); // sort cities
     },
-    nameInputOnChange(event: Event) {
-      const target = <HTMLInputElement>event.target;
-
-      this.name = target.value;
+    nameInputOnChange(event) {
+      this.name = event.target.value;
     },
-    birthDateInputOnChange(event: Event) {
-      const target = <HTMLInputElement>event.target;
-
-      this.birthDate = target.value;
+    birthDateInputOnChange(event) {
+      this.birthDate = event.target.value;
     },
-    genderSelectOnChange(event: Event) {
-      const target = <HTMLInputElement>event.target;
-
-      this.gender = target.value;
+    genderSelectOnChange(event) {
+      this.gender = event.target.value;
     },
-    cpfInputOnChange(event: Event) {
-      const target = <HTMLInputElement>event.target;
-
-      this.cpf = target.value;
+    cpfInputOnChange(event) {
+      this.cpf = event.target.value;
     },
-    streetInputOnChange(event: Event) {
-      const target = <HTMLInputElement>event.target;
-
-      this.street = target.value;
+    streetInputOnChange(event) {
+      this.street = event.target.value;
     },
-    streetNumberInputOnChange(event: Event) {
-      const target = <HTMLInputElement>event.target;
-
-      this.streetNumber = target.value;
+    streetNumberInputOnChange(event) {
+      this.streetNumber = event.target.value;
     },
-    postalCodeInputOnChange(event: Event) {
-      const target = <HTMLInputElement>event.target;
-
-      this.postalCode = target.value;
+    postalCodeInputOnChange(event) {
+      this.postalCode = event.target.value;
     },
-    stateSelectOnChange(event: Event) {
-      const target = <HTMLInputElement>event.target;
-
-      this.state = target.value;
-      this.stateId = getStateIdBySigla(target.value, this.states);
+    stateSelectOnChange(event) {
+      this.state = event.target.value;
+      this.stateId = getStateIdBySigla(event.target.value, this.states);
     },
-    citySelectOnChange(event: Event) {
-      const target = <HTMLInputElement>event.target;
-
-      this.city = target.value;
+    citySelectOnChange(event) {
+      this.city = event.target.value;
     },
     registerFormSubmit() {
-      const data: RegisterForm = {
+      const data = {
         name: this.name,
         birthDate: this.birthDate,
         gender: this.gender,
@@ -234,5 +212,8 @@ export default defineComponent({
       console.log(data);
     },
   },
-});
+  directives: {
+    imask: IMaskDirective,
+  },
+};
 </script>

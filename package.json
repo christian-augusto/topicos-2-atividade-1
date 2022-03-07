@@ -2,25 +2,25 @@
   "name": "topicos-2-atividade-1",
   "version": "1.0.0",
   "private": true,
+  "author": {
+    "name": "Christian Augusto Martins dos Santos Barros",
+    "email": "christian.barros@enjoei.com.br"
+  },
   "scripts": {
-    "validate": "npx eslint src/**",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
-  "main": "src/main.ts",
-  "_id": "topicos-2-atividade-1@1.0.0",
-  "license": "MIT",
+  "main": "index.js",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.13.0",
-    "@typescript-eslint/parser": "^5.13.0",
+    "@babel/core": "^7.17.5",
+    "@babel/eslint-parser": "^7.17.0",
     "@vue/cli": "^5.0.1",
     "@vue/cli-plugin-babel": "^5.0.1",
     "@vue/cli-plugin-eslint": "^5.0.1",
     "@vue/cli-plugin-router": "^5.0.1",
-    "@vue/cli-plugin-typescript": "^5.0.1",
+    "@vue/cli-plugin-vuex": "^5.0.1",
     "@vue/cli-service": "^5.0.1",
-    "@vue/eslint-config-typescript": "^10.0.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-preset-minify": "^0.5.1",
     "core-js": "^3.21.1",
@@ -33,11 +33,21 @@
     "sass": "^1.49.9",
     "sass-loader": "^12.6.0",
     "swiper": "^8.0.7",
-    "typescript": "^4.6.2",
     "vue": "^3.2.31",
-    "vue-class-component": "^7.2.6",
     "vue-imask": "^6.4.2",
-    "vue-router": "^4.0.13"
+    "vue-router": "^4.0.13",
+    "vuex": "^4.0.2"
+  },
+  "_id": "topicos-2-atividade-1@1.0.0",
+  "bugs": {
+    "url": "https://github.com/christian-augusto/topicos-2-atividade-1/issues"
+  },
+  "homepage": "https://github.com/christian-augusto/topicos-2-atividade-1#readme",
+  "license": "MIT",
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/christian-augusto/topicos-2-atividade-1.git"
   },
   "engines": {
     "node": "16.14.0"

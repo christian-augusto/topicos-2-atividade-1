@@ -4,15 +4,14 @@
   </main>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script>
 import vRegisterForm from "./register-form/register-form.vue";
 
 import "./register.scss";
 
-export default defineComponent({
+export default {
   components: {
     vRegisterForm,
   },
-});
+};
 </script>

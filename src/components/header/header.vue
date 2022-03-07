@@ -1,13 +1,13 @@
 <template>
   <header class="header">
-    <div class="header__top">
+    <div class="header__wrapper flex">
       <div class="header__logo">
         <router-link to="/">
           <img class="header__logo-img" src="@assets/svg/logo.svg" :alt="translations['logoImg']" />
         </router-link>
       </div>
       <nav class="header__navigation">
-        <ul class="flex-row">
+        <ul class="flex">
           <li>
             <router-link to="/">{{ translations["navigationHomeLink"] }}</router-link>
           </li>
@@ -20,17 +20,15 @@
   </header>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-
+<script>
 import translations from "./translations";
 import "./header.scss";
 
-export default defineComponent({
+export default {
   data() {
     return {
       translations: translations,
     };
   },
-});
+};
 </script>

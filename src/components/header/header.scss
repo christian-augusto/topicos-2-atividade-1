@@ -1,6 +1,6 @@
 @include mq-desktop-regular {
   .header {
-    &__top {
+    &__wrapper {
       flex-direction: row;
       align-items: center;
       box-sizing: border-box;
@@ -27,6 +27,7 @@
 
     &__navigation {
       > ul {
+        flex-direction: row;
         margin: 0 0 0 20px;
 
         > li {
