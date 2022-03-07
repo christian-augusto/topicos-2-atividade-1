@@ -1,15 +1,15 @@
 <template>
-  <app-header />
+  <vHeader />
   <router-view />
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import Header from "@components/Header/Header.vue";
+import vHeader from "@components/header/header.vue";
 
 export default defineComponent({
   components: {
-    "app-header": Header,
+    vHeader,
   },
 });
 </script>

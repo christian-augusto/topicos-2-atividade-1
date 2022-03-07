@@ -24,7 +24,7 @@
 import { defineComponent } from "vue";
 
 import translations from "./translations";
-import "./Header.scss";
+import "./header.scss";
 
 export default defineComponent({
   data() {
@@ -34,5 +34,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style src="./Header.scss" lang="scss"></style>

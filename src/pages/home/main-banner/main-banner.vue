@@ -52,8 +52,8 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/lazy";
 
-import "./MainBanner.scss";
 import translations from "./translations";
+import "./main-banner.scss";
 
 export default defineComponent({
   components: {

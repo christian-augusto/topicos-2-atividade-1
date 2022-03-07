@@ -67,11 +67,11 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
+import { buildHeaders } from "@utils/api-call";
 import translations from "./translations";
 import State from "./interfaces/state";
 import City from "./interfaces/city";
-import "./RegisterForm.scss";
-import { buildHeaders } from "@utils/api-call";
+import "./register-form.scss";
 
 async function getStates(): Promise<State[]> {
   const url = "https://servicodados.ibge.gov.br/api/v1/localidades/estados";
