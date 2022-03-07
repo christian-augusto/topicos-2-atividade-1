@@ -28,6 +28,12 @@ function setTranslations() {
   translations.citySelectLabel = "Cidade:";
   translations.citySelectPlaceholder = "Selecione a cidade";
 
+  translations.invalidBirthDateWarning = "Data de nascimento não é válida";
+
+  translations.invalidCpfWarning = "CPF não é válido";
+
+  translations.successFormMessage = "Solicitação de cadastro enviada com sucesso";
+
   return translations;
 }
 
