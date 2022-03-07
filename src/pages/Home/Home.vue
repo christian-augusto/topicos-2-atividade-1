@@ -1,6 +1,6 @@
 <template>
   <main class="home">
-    <MainBanner />
+    <main-banner />
   </main>
 </template>
 
@@ -10,7 +10,7 @@ import MainBanner from "./MainBanner/MainBanner.vue";
 
 export default defineComponent({
   components: {
-    MainBanner,
+    "main-banner": MainBanner,
   },
 });
 </script>

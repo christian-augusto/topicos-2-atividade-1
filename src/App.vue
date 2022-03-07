@@ -1,5 +1,5 @@
 <template>
-  <Header />
+  <app-header />
   <router-view />
 </template>
 
@@ -9,7 +9,7 @@ import Header from "@components/Header/Header.vue";
 
 export default defineComponent({
   components: {
-    Header,
+    "app-header": Header,
   },
 });
 </script>
