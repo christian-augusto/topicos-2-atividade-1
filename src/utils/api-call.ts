@@ -1,21 +1,19 @@
-export function buildHeaders(obj) {
+export function buildHeaders(map: Map<string, string>) {
   const headers = new Headers();
 
-  Object.entries(obj).forEach(([key, value]) => headers.append(key, value));
+  for (const [key, value] of map) {
+    headers.append(key, value);
+  }
 
   return headers;
 }
 
-export function buildQueryParams(obj) {
-  let queryParams = "";
+export function buildQueryParams(map: Map<string, string>) {
+  const queryParams = [];
 
-  queryParams = Object.entries(obj)
-    .reduce(function (acc, [key, value]) {
-      acc.push(`${key}=${value}`);
+  for (const [key, value] of map) {
+    queryParams.push(`${key}=${value}`);
+  }
 
-      return acc;
-    }, [])
-    .join("&");
-
-  return `?${queryParams}`;
+  return `?${queryParams.join("&")}`;
 }
