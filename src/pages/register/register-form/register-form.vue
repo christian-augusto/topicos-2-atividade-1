@@ -2,7 +2,7 @@
   <section class="register-form">
     <form class="flex" @submit="registerFormSubmit">
       <div class="form__field flex">
-        <label for="cpf-input">{{ translations.nameInputLabel }}</label>
+        <label for="name-input">{{ translations.nameInputLabel }}</label>
         <input
           type="text"
           id="name-input"
@@ -28,7 +28,7 @@
         />
       </div>
       <div class="form__field flex">
-        <label for="name-select">{{ translations.genderSelectLabel }}</label>
+        <label for="gender-select">{{ translations.genderSelectLabel }}</label>
         <select id="gender-select" @change="genderSelectOnChange" required="required">
           <option value="">{{ translations.genderSelectPlaceholder }}</option>
           <option value="male">Masculino</option>

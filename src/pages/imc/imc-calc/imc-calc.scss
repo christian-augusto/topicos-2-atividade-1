@@ -1,0 +1,111 @@
+.imc-calc {
+  width: 100%;
+  max-width: 250px;
+  height: auto;
+}
+
+@include mq-desktop-regular {
+  .imc-calc {
+    margin: 25px auto 0;
+  }
+
+  form {
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+
+    input[type="number"] {
+      width: 100%;
+      height: auto;
+      background: #fff;
+      box-sizing: border-box;
+      padding: 8px;
+      border: 1px solid #000;
+      border-radius: 3px;
+      font-family: $default-font;
+      font-size: 15px;
+      line-height: 19px;
+      font-weight: 400;
+    }
+
+    label {
+      font-family: $default-font;
+      font-size: 15px;
+      line-height: 18px;
+      font-weight: 400;
+      margin: 0 0 5px 0;
+    }
+  }
+
+  .form {
+    &__field {
+      margin: 15px 0 0 0;
+      flex-direction: column;
+      justify-content: flex-start;
+
+      &:first-child {
+        margin: 0;
+      }
+    }
+
+    &__actions {
+      width: auto;
+      height: auto;
+      margin: 10px auto 0;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    &__clean-btn {
+      @include remove-appearance;
+      display: block;
+      width: 100%;
+      height: auto;
+      box-sizing: border-box;
+      padding: 8px 13px;
+      cursor: pointer;
+      border-radius: 3px;
+      border: none;
+      background: #d3be00;
+      font-family: $default-font;
+      font-size: 15px;
+      line-height: 19px;
+      font-weight: 400;
+    }
+
+    &__send-btn {
+      @include remove-appearance;
+      display: block;
+      width: 100%;
+      height: auto;
+      box-sizing: border-box;
+      padding: 8px 13px;
+      cursor: pointer;
+      border-radius: 3px;
+      border: none;
+      background: #00d2e9;
+      font-family: $default-font;
+      font-size: 15px;
+      line-height: 19px;
+      font-weight: 400;
+      margin: 0 0 0 10px;
+    }
+
+    &__result {
+      width: auto;
+      height: auto;
+      margin: 10px auto 0;
+      flex-direction: column;
+      align-items: center;
+
+      p {
+        font-family: $default-font;
+        font-size: 15px;
+        line-height: 18px;
+        font-weight: 400;
+        text-decoration: none;
+        text-align: left;
+      }
+    }
+  }
+}
