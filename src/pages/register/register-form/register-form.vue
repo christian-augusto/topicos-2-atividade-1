@@ -9,7 +9,7 @@
           autocomplete="nope"
           required="required"
           :placeholder="translations.nameInputPlaceholder"
-          @change="nameInputOnChange"
+          v-model="name"
         />
       </div>
       <div class="form__field flex">
@@ -22,14 +22,14 @@
           minlength="10"
           required="required"
           :placeholder="translations.birthDateInputPlaceholder"
-          @change="birthDateInputOnChange"
+          v-model="birthDate"
           v-imask="birthDateMask"
-          v-bind:class="{ 'has-errors': invalidBirthDate }"
+          :class="{ 'has-errors': invalidBirthDate }"
         />
       </div>
       <div class="form__field flex">
         <label for="gender-select">{{ translations.genderSelectLabel }}</label>
-        <select id="gender-select" @change="genderSelectOnChange" required="required">
+        <select id="gender-select" v-model="gender" required="required">
           <option value="">{{ translations.genderSelectPlaceholder }}</option>
           <option value="male">Masculino</option>
           <option value="female">Feminino</option>
@@ -46,9 +46,9 @@
           minlength="14"
           required="required"
           :placeholder="translations.cpfInputPlaceholder"
-          @change="cpfInputOnChange"
+          v-model="cpf"
           v-imask="cpfMask"
-          v-bind:class="{ 'has-errors': invalidCpf }"
+          :class="{ 'has-errors': invalidCpf }"
         />
       </div>
       <div class="form__field flex">
@@ -57,7 +57,7 @@
           type="text"
           id="street-input"
           :placeholder="translations.streetInputPlaceholder"
-          @change="streetInputOnChange"
+          v-model="street"
           required="required"
           autocomplete="nope"
         />
@@ -67,9 +67,9 @@
         <input
           type="text"
           id="streetNumber-input"
-          :placeholder="translations.streetNumberInputPlaceholder"
-          @change="streetNumberInputOnChange"
           required="required"
+          :placeholder="translations.streetNumberInputPlaceholder"
+          v-model="streetNumber"
           autocomplete="nope"
         />
       </div>
@@ -82,13 +82,13 @@
           minlength="9"
           required="required"
           :placeholder="translations.postalCodeInputPlaceholder"
-          @change="postalCodeInputOnChange"
+          v-model="postalCode"
           v-imask="postalCodeMask"
         />
       </div>
       <div class="form__field flex">
         <label for="state-select">{{ translations.stateSelectLabel }}</label>
-        <select id="state-select" v-if="states.length > 0" @change="stateSelectOnChange" required="required">
+        <select id="state-select" v-if="states.length > 0" v-model="state" required="required">
           <option value="">{{ translations.stateSelectPlaceholder }}</option>
           <option v-for="state in states" :key="state.id" :data-id="state.id" :value="state.sigla">
             {{ state.nome }}
@@ -100,9 +100,9 @@
       </div>
       <div class="form__field flex">
         <label for="city-select">{{ translations.citySelectLabel }}</label>
-        <select id="city-select" v-if="cities.length > 0" @change="citySelectOnChange" required="required">
+        <select id="city-select" required="required" v-if="cities.length > 0" v-model="city">
           <option value="">{{ translations.citySelectPlaceholder }}</option>
-          <option v-for="city in cities" :key="city.id" :data-id="city.id" :value="city.sigla">
+          <option v-for="city in cities" :key="city.id" :value="city.nome">
             {{ city.nome }}
           </option>
         </select>
@@ -167,6 +167,7 @@ export default {
   },
   watch: {
     state() {
+      this.stateId = getStateIdBySigla(this.state, this.states);
       this.setCities();
     },
   },
@@ -191,36 +192,6 @@ export default {
       });
 
       this.cities = cities;
-    },
-    nameInputOnChange(event) {
-      this.name = event.target.value;
-    },
-    birthDateInputOnChange(event) {
-      this.invalidBirthDate = false;
-      this.birthDate = event.target.value;
-    },
-    genderSelectOnChange(event) {
-      this.gender = event.target.value;
-    },
-    cpfInputOnChange(event) {
-      this.invalidCpf = false;
-      this.cpf = event.target.value;
-    },
-    streetInputOnChange(event) {
-      this.street = event.target.value;
-    },
-    streetNumberInputOnChange(event) {
-      this.streetNumber = event.target.value;
-    },
-    postalCodeInputOnChange(event) {
-      this.postalCode = event.target.value;
-    },
-    stateSelectOnChange(event) {
-      this.state = event.target.value;
-      this.stateId = getStateIdBySigla(event.target.value, this.states);
-    },
-    citySelectOnChange(event) {
-      this.city = event.target.value;
     },
     validBirthDate(birthDate) {
       const birthDateSplit = birthDate.split("/");
@@ -263,6 +234,8 @@ export default {
       }
 
       alert(translations.successFormMessage);
+
+      console.log(data);
     },
   },
   directives: {
