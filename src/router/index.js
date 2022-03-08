@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory } from "vue-router";
+
 import vHome from "@pages/home/home.vue";
 import vRegister from "@pages/register/register.vue";
+import vImc from "@pages/imc/imc.vue";
 
 const routes = [
   {
@@ -12,6 +14,11 @@ const routes = [
     path: "/register",
     name: "register",
     component: vRegister,
+  },
+  {
+    path: "/imc",
+    name: "imc",
+    component: vImc,
   },
 ];
 

@@ -1,5 +1,5 @@
 <template>
-  <main class="register">
+  <main role="main" class="register">
     <vRegisterForm />
   </main>
 </template>
