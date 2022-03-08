@@ -1,6 +1,6 @@
 <template>
   <section class="register-form">
-    <form class="form flex" @submit="registerFormSubmit">
+    <form class="flex" @submit="registerFormSubmit">
       <div class="form__field flex">
         <label for="cpf-input">{{ translations.nameInputLabel }}</label>
         <input
