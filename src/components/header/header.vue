@@ -17,6 +17,9 @@
           <li>
             <router-link to="/imc">{{ translations["navigationImcLink"] }}</router-link>
           </li>
+          <li>
+            <router-link to="/about-us">{{ translations["navigationAboutUsLink"] }}</router-link>
+          </li>
         </ul>
       </nav>
     </div>

@@ -1,13 +1,11 @@
 .imc-table {
   width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 @include mq-desktop-regular {
   .imc-table {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-
     table {
       width: 100%;
 

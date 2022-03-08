@@ -1,0 +1,9 @@
+.institutional-text {
+  width: 100%;
+}
+
+@include mq-desktop-regular {
+  .institutional-text {
+    
+  }
+}
