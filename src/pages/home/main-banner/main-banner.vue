@@ -28,7 +28,7 @@
         </swiper-slide>
         <swiper-slide>
           <img
-            :data-src="require('@/assets/images/home/main-banner-4.jpg')"
+            :data-src="require('@/assets/images/home/main-banner-3.jpg')"
             :alt="translations.translation('banner3ImgAlt')"
             class="banner swiper-lazy"
           />
