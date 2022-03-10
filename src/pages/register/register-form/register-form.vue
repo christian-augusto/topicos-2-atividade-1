@@ -2,18 +2,18 @@
   <section class="register-form">
     <form class="flex" @submit="registerFormSubmit">
       <div class="form__field flex">
-        <label for="name-input">{{ translations.nameInputLabel }}</label>
+        <label for="name-input">{{ translations.translation("nameInputLabel") }}</label>
         <input
           type="text"
           id="name-input"
           autocomplete="nope"
           required="required"
-          :placeholder="translations.nameInputPlaceholder"
+          :placeholder="translations.translation('nameInputPlaceholder')"
           v-model="name"
         />
       </div>
       <div class="form__field flex">
-        <label for="birthDate-input">{{ translations.birthDateInputLabel }}</label>
+        <label for="birthDate-input">{{ translations.translation("birthDateInputLabel") }}</label>
         <input
           type="text"
           id="birthDate-input"
@@ -21,23 +21,23 @@
           autocomplete="nope"
           minlength="10"
           required="required"
-          :placeholder="translations.birthDateInputPlaceholder"
+          :placeholder="translations.translation('birthDateInputPlaceholder')"
           v-model="birthDate"
           v-imask="birthDateMask"
           :class="{ 'has-errors': invalidBirthDate }"
         />
       </div>
       <div class="form__field flex">
-        <label for="gender-select">{{ translations.genderSelectLabel }}</label>
+        <label for="gender-select">{{ translations.translation("genderSelectLabel") }}</label>
         <select id="gender-select" v-model="gender" required="required">
-          <option value="">{{ translations.genderSelectPlaceholder }}</option>
+          <option value="">{{ translations.translation("genderSelectPlaceholder") }}</option>
           <option value="male">Masculino</option>
           <option value="female">Feminino</option>
           <option value="other">Outro</option>
         </select>
       </div>
       <div class="form__field flex">
-        <label for="cpf-input">{{ translations.cpfInputLabel }}</label>
+        <label for="cpf-input">{{ translations.translation("cpfInputLabel") }}</label>
         <input
           type="text"
           id="cpf-input"
@@ -45,69 +45,69 @@
           autocomplete="nope"
           minlength="14"
           required="required"
-          :placeholder="translations.cpfInputPlaceholder"
+          :placeholder="translations.translation('cpfInputPlaceholder')"
           v-model="cpf"
           v-imask="cpfMask"
           :class="{ 'has-errors': invalidCpf }"
         />
       </div>
       <div class="form__field flex">
-        <label for="street-input">{{ translations.streetInputLabel }}</label>
+        <label for="street-input">{{ translations.translation("streetInputLabel") }}</label>
         <input
           type="text"
           id="street-input"
-          :placeholder="translations.streetInputPlaceholder"
+          :placeholder="translations.translation('streetInputPlaceholder')"
           v-model="street"
           required="required"
           autocomplete="nope"
         />
       </div>
       <div class="form__field flex">
-        <label for="streetNumber-input">{{ translations.streetNumberInputLabel }}</label>
+        <label for="streetNumber-input">{{ translations.translation("streetNumberInputLabel") }}</label>
         <input
           type="text"
           id="streetNumber-input"
           required="required"
-          :placeholder="translations.streetNumberInputPlaceholder"
+          :placeholder="translations.translation('streetNumberInputPlaceholder')"
           v-model="streetNumber"
           autocomplete="nope"
         />
       </div>
       <div class="form__field flex">
-        <label for="postalCode-input">{{ translations.postalCodeInputLabel }}</label>
+        <label for="postalCode-input">{{ translations.translation("postalCodeInputLabel") }}</label>
         <input
           type="text"
           id="postalCode-input"
           autocomplete="nope"
           minlength="9"
           required="required"
-          :placeholder="translations.postalCodeInputPlaceholder"
+          :placeholder="translations.translation('postalCodeInputPlaceholder')"
           v-model="postalCode"
           v-imask="postalCodeMask"
         />
       </div>
       <div class="form__field flex">
-        <label for="state-select">{{ translations.stateSelectLabel }}</label>
+        <label for="state-select">{{ translations.translation("stateSelectLabel") }}</label>
         <select id="state-select" v-if="states.length > 0" v-model="state" required="required">
-          <option value="">{{ translations.stateSelectPlaceholder }}</option>
+          <option value="">{{ translations.translation("stateSelectPlaceholder") }}</option>
           <option v-for="state in states" :key="state.id" :data-id="state.id" :value="state.sigla">
             {{ state.nome }}
           </option>
         </select>
         <select id="state-select" v-else required="required">
-          <option value="">{{ translations.stateSelectPlaceholder }}</option>
+          <option value="">{{ translations.translation("stateSelectPlaceholder") }}</option>
         </select>
       </div>
       <div class="form__field flex">
-        <label for="city-select">{{ translations.citySelectLabel }}</label>
+        <label for="city-select">{{ translations.translation("citySelectLabel") }}</label>
         <select id="city-select" required="required" v-if="cities.length > 0" v-model="city">
-          <option value="">{{ translations.citySelectPlaceholder }}</option>
+          <option value="">{{ translations.translation("citySelectPlaceholder") }}</option>
           <option v-for="city in cities" :key="city.id" :value="city.nome">
             {{ city.nome }}
           </option>
         </select>
         <select id="city-select" v-else required="required">
-          <option value="">{{ translations.citySelectPlaceholder }}</option>
+          <option value="">{{ translations.translation("citySelectPlaceholder") }}</option>
         </select>
       </div>
       <div class="form__actions flex">
@@ -120,10 +120,13 @@
 <script>
 import { IMaskDirective } from "vue-imask";
 
+import Translations from "@/translations";
+import translationsData from "./translations.json";
 import validCpf from "@utils/valid-cpf";
-import translations from "./translations";
 import { getStates, getStateCities } from "./requests";
 import "./register-form.scss";
+
+const translations = new Translations(translationsData);
 
 function getStateIdBySigla(sigla, states) {
   for (let i = 0; i < states.length; i++) {
@@ -221,19 +224,19 @@ export default {
 
       if (!this.validBirthDate(data.birthDate)) {
         this.invalidBirthDate = true;
-        alert(translations.invalidBirthDateWarning);
+        alert(translations.translation("invalidBirthDateWarning"));
         this.$refs.birthDate.focus();
         return false;
       }
 
       if (!validCpf(data.cpf)) {
         this.invalidCpf = true;
-        alert(translations.invalidCpfWarning);
+        alert(translations.translation("invalidCpfWarning"));
         this.$refs.cpf.focus();
         return false;
       }
 
-      alert(translations.successFormMessage);
+      alert(translations.translation("successFormMessage"));
 
       console.log(data);
     },

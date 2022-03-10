@@ -14,29 +14,29 @@
       >
         <swiper-slide>
           <img
-            :data-src="translations['banner1ImgSrc']"
-            :alt="translations['banner1ImgAlt']"
+            :data-src="require('@/assets/images/home/main-banner-1.jpg')"
+            :alt="translations.translation('banner1ImgAlt')"
             class="banner swiper-lazy"
           />
         </swiper-slide>
         <swiper-slide>
           <img
-            :data-src="translations['banner2ImgSrc']"
-            :alt="translations['banner2ImgAlt']"
+            :data-src="require('@/assets/images/home/main-banner-2.jpg')"
+            :alt="translations.translation('banner2ImgAlt')"
             class="banner swiper-lazy"
           />
         </swiper-slide>
         <swiper-slide>
           <img
-            :data-src="translations['banner3ImgSrc']"
-            :alt="translations['banner3ImgAlt']"
+            :data-src="require('@/assets/images/home/main-banner-4.jpg')"
+            :alt="translations.translation('banner3ImgAlt')"
             class="banner swiper-lazy"
           />
         </swiper-slide>
         <swiper-slide>
           <img
-            :data-src="translations['banner4ImgSrc']"
-            :alt="translations['banner4ImgAlt']"
+            :data-src="require('@/assets/images/home/main-banner-4.jpg')"
+            :alt="translations.translation('banner4ImgAlt')"
             class="banner swiper-lazy"
           />
         </swiper-slide>
@@ -49,10 +49,12 @@
 import { Lazy, Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
-import "swiper/css/lazy";
 
-import translations from "./translations";
+import Translations from "@/translations";
+import translationsData from "./translations.json";
 import "./main-banner.scss";
+
+const translations = new Translations(translationsData);
 
 export default {
   components: {
@@ -66,7 +68,7 @@ export default {
   },
   setup() {
     return {
-      modules: [Lazy, Navigation],
+      modules: [Navigation, Lazy],
     };
   },
 };

@@ -12,6 +12,7 @@
         "alias": {
           "@": "./src",
           "@components": "./src/components",
+          "@errors": "./src/errors",
           "@pages": "./src/pages",
           "@styles": "./src/styles",
           "@assets": "./src/assets",

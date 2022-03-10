@@ -1,0 +1,25 @@
+{
+  "pt": {
+    "nameInputLabel": "Nome completo:",
+    "nameInputPlaceholder": "Nome completo",
+    "birthDateInputLabel": "Data de nascimento:",
+    "birthDateInputPlaceholder": "__/__/____",
+    "genderSelectLabel": "Gênero:",
+    "genderSelectPlaceholder": "Selecione o gênero",
+    "cpfInputLabel": "CPF:",
+    "cpfInputPlaceholder": "XXX.XXX.XXX-XX",
+    "streetInputLabel": "Logradouro:",
+    "streetInputPlaceholder": "",
+    "streetNumberInputLabel": "Número do Logradouro:",
+    "streetNumberInputPlaceholder": "",
+    "postalCodeInputLabel": "CEP:",
+    "postalCodeInputPlaceholder": "",
+    "stateSelectLabel": "Estado:",
+    "stateSelectPlaceholder": "Selecione o estado",
+    "citySelectLabel": "Cidade:",
+    "citySelectPlaceholder": "Selecione a cidade",
+    "invalidBirthDateWarning": "Data de nascimento não é válida",
+    "invalidCpfWarning": "CPF não é válido",
+    "successFormMessage": "Solicitação de cadastro enviada com sucesso"
+  }
+}
