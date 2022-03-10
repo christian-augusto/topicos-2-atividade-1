@@ -1,19 +1,19 @@
 <template>
   <section class="institutional-text">
     <div class="institutional-text__wrapper flex">
-      <h1 class="main__title">Mais Saúde</h1>
+      <h1 class="main__title" v-html="translations.translation('pageTitle')"></h1>
     </div>
     <div class="institutional-text__wrapper flex">
-      <h4 class="main__sub-title">Visão</h4>
-      <p v-html="translations.translation('target')"></p>
+      <h4 class="main__sub-title" v-html="translations.translation('targetTitle')"></h4>
+      <p v-html="translations.translation('targetText')"></p>
     </div>
     <div class="institutional-text__wrapper flex">
-      <h4 class="main__sub-title">Missão</h4>
-      <p v-html="translations.translation('mission')"></p>
+      <h4 class="main__sub-title" v-html="translations.translation('missionTitle')"></h4>
+      <p v-html="translations.translation('missionText')"></p>
     </div>
     <div class="institutional-text__wrapper flex">
-      <h4 class="main__sub-title">Valores</h4>
-      <p v-html="translations.translation('importance')"></p>
+      <h4 class="main__sub-title" v-html="translations.translation('importanceTitle')"></h4>
+      <p v-html="translations.translation('importanceText')"></p>
     </div>
   </section>
 </template>
