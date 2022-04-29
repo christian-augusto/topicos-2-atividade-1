@@ -1,8 +1,8 @@
 {
   "pt": {
-    "weightInputLabel": "Peso(kg):",
+    "weightInputLabel": "Peso (kg):",
     "weightInputPlaceholder": "80",
-    "heightInputLabel": "Altura(cm):",
+    "heightInputLabel": "Altura (cm):",
     "heightInputPlaceholder": "150",
     "imcFirstClass": "Classificação: MAGREZA",
     "imcSecondClass": "Classificação: NORMAL",

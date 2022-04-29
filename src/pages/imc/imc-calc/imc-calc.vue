@@ -65,7 +65,7 @@ export default {
       const height = Number(this.height) / 100;
       const weight = Number(this.weight);
 
-      const imc = weight / (height * height);
+      const imc = (weight / (height * height)).toFixed(1);
 
       this.imc = `${imc}`;
 
