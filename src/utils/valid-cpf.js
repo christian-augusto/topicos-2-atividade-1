@@ -1,21 +1,38 @@
 function validCpf(strCPF) {
-  var Soma;
-  var Resto;
-  Soma = 0;
-  if (strCPF == "00000000000") return false;
+  if (strCPF.length != 11) {
+    return false;
+  }
 
-  for (let i = 1; i <= 9; i++) Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
-  Resto = (Soma * 10) % 11;
+  const blackList = [
+    "00000000000",
+    "11111111111",
+    "22222222222",
+    "33333333333",
+    "44444444444",
+    "55555555555",
+    "66666666666",
+    "77777777777",
+    "88888888888",
+    "99999999999"
+  ];
 
-  if (Resto == 10 || Resto == 11) Resto = 0;
-  if (Resto != parseInt(strCPF.substring(9, 10))) return false;
+  let soma;
+  let resto;
+  soma = 0;
+  if (blackList.includes(strCPF)) return false;
 
-  Soma = 0;
-  for (let i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
-  Resto = (Soma * 10) % 11;
+  for (let i = 1; i <= 9; i++) soma = soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
+  resto = (soma * 10) % 11;
 
-  if (Resto == 10 || Resto == 11) Resto = 0;
-  if (Resto != parseInt(strCPF.substring(10, 11))) return false;
+  if (resto == 10 || resto == 11) resto = 0;
+  if (resto != parseInt(strCPF.substring(9, 10))) return false;
+
+  soma = 0;
+  for (let i = 1; i <= 10; i++) soma = soma + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
+  resto = (soma * 10) % 11;
+
+  if (resto == 10 || resto == 11) resto = 0;
+  if (resto != parseInt(strCPF.substring(10, 11))) return false;
   return true;
 }
 
