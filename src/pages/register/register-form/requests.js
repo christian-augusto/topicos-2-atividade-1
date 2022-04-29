@@ -1,4 +1,22 @@
-import { buildHeaders } from "@utils/api-call";
+export async function queryAddressByPostalCode(postalCode) {
+  postalCode = postalCode.replace(/\D/gim, "");
+
+  const url = `https://app.professordaniloalves.com.br/api/v1/endereco/${postalCode}`;
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: new Headers({
+        Accept: "application/json",
+      }),
+    });
+
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
 
 export async function getStates() {
   const url = "https://servicodados.ibge.gov.br/api/v1/localidades/estados";
@@ -6,7 +24,7 @@ export async function getStates() {
   try {
     const response = await fetch(url, {
       method: "GET",
-      headers: buildHeaders({
+      headers: new Headers({
         Accept: "application/json",
       }),
     });
@@ -24,7 +42,7 @@ export async function getStateCities(stateId) {
   try {
     const response = await fetch(url, {
       method: "GET",
-      headers: buildHeaders({
+      headers: new Headers({
         Accept: "application/json",
       }),
     });

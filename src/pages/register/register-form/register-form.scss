@@ -33,6 +33,11 @@
         &.has-errors {
           border: 1px solid #f00
         }
+
+        &.is--blocked {
+          pointer-events: none;
+          opacity: .4;
+        }
       }
 
       select {
@@ -54,6 +59,11 @@
         option {
           width: 100%;
           height: auto;
+        }
+
+        &.is--blocked {
+          pointer-events: none;
+          opacity: .4;
         }
       }
 

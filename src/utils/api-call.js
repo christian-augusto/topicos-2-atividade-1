@@ -1,11 +1,3 @@
-export function buildHeaders(obj) {
-  const headers = new Headers();
-
-  Object.entries(obj).forEach(([key, value]) => headers.append(key, value));
-
-  return headers;
-}
-
 export function buildQueryParams(obj) {
   let queryParams = "";
 

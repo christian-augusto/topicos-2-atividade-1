@@ -52,6 +52,20 @@
         />
       </div>
       <div class="form__field flex">
+        <label for="postalCode-input">{{ translations.translation("postalCodeInputLabel") }}</label>
+        <input
+          type="text"
+          id="postalCode-input"
+          autocomplete="nope"
+          minlength="9"
+          required="required"
+          :placeholder="translations.translation('postalCodeInputPlaceholder')"
+          v-model="postalCode"
+          v-imask="postalCodeMask"
+          :class="{ 'is--blocked': blockStateAndCities }"
+        />
+      </div>
+      <div class="form__field flex">
         <label for="street-input">{{ translations.translation("streetInputLabel") }}</label>
         <input
           type="text"
@@ -74,39 +88,38 @@
         />
       </div>
       <div class="form__field flex">
-        <label for="postalCode-input">{{ translations.translation("postalCodeInputLabel") }}</label>
-        <input
-          type="text"
-          id="postalCode-input"
-          autocomplete="nope"
-          minlength="9"
-          required="required"
-          :placeholder="translations.translation('postalCodeInputPlaceholder')"
-          v-model="postalCode"
-          v-imask="postalCodeMask"
-        />
-      </div>
-      <div class="form__field flex">
         <label for="state-select">{{ translations.translation("stateSelectLabel") }}</label>
-        <select id="state-select" v-if="states.length > 0" v-model="state" required="required">
+        <select
+          id="state-select"
+          v-if="states.length > 0"
+          v-model="state"
+          required="required"
+          :class="{ 'is--blocked': blockStateAndCities }"
+        >
           <option value="">{{ translations.translation("stateSelectPlaceholder") }}</option>
           <option v-for="state in states" :key="state.id" :data-id="state.id" :value="state.sigla">
             {{ state.nome }}
           </option>
         </select>
-        <select id="state-select" v-else required="required">
+        <select id="state-select" v-else required="required" :class="{ 'is--blocked': blockStateAndCities }">
           <option value="">{{ translations.translation("stateSelectPlaceholder") }}</option>
         </select>
       </div>
       <div class="form__field flex">
         <label for="city-select">{{ translations.translation("citySelectLabel") }}</label>
-        <select id="city-select" required="required" v-if="cities.length > 0" v-model="city">
+        <select
+          id="city-select"
+          required="required"
+          v-if="cities.length > 0"
+          v-model="city"
+          :class="{ 'is--blocked': blockStateAndCities }"
+        >
           <option value="">{{ translations.translation("citySelectPlaceholder") }}</option>
           <option v-for="city in cities" :key="city.id" :value="city.nome">
             {{ city.nome }}
           </option>
         </select>
-        <select id="city-select" v-else required="required">
+        <select id="city-select" v-else required="required" :class="{ 'is--blocked': blockStateAndCities }">
           <option value="">{{ translations.translation("citySelectPlaceholder") }}</option>
         </select>
       </div>
@@ -123,7 +136,7 @@ import { IMaskDirective } from "vue-imask";
 import Translations from "@/translations";
 import translationsData from "./translations.json";
 import validCpf from "@utils/valid-cpf";
-import { getStates, getStateCities } from "./requests";
+import { queryAddressByPostalCode, getStates, getStateCities } from "./requests";
 import "./register-form.scss";
 
 const translations = new Translations(translationsData);
@@ -161,23 +174,54 @@ export default {
       },
       state: "",
       city: "",
-
       translations,
       states: [],
       stateId: -1,
       cities: [],
+      blockStateAndCities: false,
     };
   },
   watch: {
     state() {
+      if (this.blockStateAndCities) {
+        return;
+      }
+
       this.stateId = getStateIdBySigla(this.state, this.states);
       this.setCities();
+    },
+    postalCode() {
+      this.setStreetByPostalCode();
     },
   },
   mounted() {
     this.setStates();
   },
   methods: {
+    async setStreetByPostalCode() {
+      if (this.postalCode.length != 9) {
+        return;
+      }
+
+      this.blockStateAndCities = true;
+
+      const address = await queryAddressByPostalCode(this.postalCode);
+
+      if (address === null) {
+        this.blockStateAndCities = false;
+        return;
+      }
+
+      this.street = address.logradouro;
+      this.state = address.uf;
+
+      this.stateId = getStateIdBySigla(this.state, this.states);
+      await this.setCities();
+
+      this.city = address.localidade;
+
+      this.blockStateAndCities = false;
+    },
     async setStates() {
       const states = await getStates();
 
