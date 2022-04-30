@@ -2,14 +2,28 @@
   <section class="register-form">
     <form class="flex" @submit="registerFormSubmit">
       <div class="form__field flex">
-        <label for="name-input">{{ translations.translation("nameInputLabel") }}</label>
+        <label for="completeName-input">{{ translations.translation("completeNameInputLabel") }}</label>
         <input
           type="text"
-          id="name-input"
+          id="completeName-input"
           autocomplete="nope"
           required="required"
-          :placeholder="translations.translation('nameInputPlaceholder')"
-          v-model="name"
+          minlength="5"
+          :placeholder="translations.translation('completeNameInputPlaceholder')"
+          v-model="completeName"
+          :class="{ 'is--blocked': blockedForm }"
+        />
+      </div>
+      <div class="form__field flex">
+        <label for="email-input">{{ translations.translation("emailInputLabel") }}</label>
+        <input
+          type="email"
+          id="email-input"
+          autocomplete="nope"
+          required="required"
+          :placeholder="translations.translation('emailInputPlaceholder')"
+          v-model="email"
+          :class="{ 'is--blocked': blockedForm }"
         />
       </div>
       <div class="form__field flex">
@@ -20,20 +34,20 @@
           ref="birthDate"
           autocomplete="nope"
           minlength="10"
+          maxlength="10"
           required="required"
           :placeholder="translations.translation('birthDateInputPlaceholder')"
           v-model="birthDate"
           v-imask="birthDateMask"
-          :class="{ 'has-errors': invalidBirthDate }"
+          :class="{ 'has-errors': invalidBirthDate, 'is--blocked': blockedForm }"
         />
       </div>
       <div class="form__field flex">
         <label for="gender-select">{{ translations.translation("genderSelectLabel") }}</label>
-        <select id="gender-select" v-model="gender" required="required">
+        <select id="gender-select" v-model="gender" required="required" :class="{ 'is--blocked': blockedForm }">
           <option value="">{{ translations.translation("genderSelectPlaceholder") }}</option>
-          <option value="male">Masculino</option>
-          <option value="female">Feminino</option>
-          <option value="other">Outro</option>
+          <option value="M">Masculino</option>
+          <option value="F">Feminino</option>
         </select>
       </div>
       <div class="form__field flex">
@@ -44,11 +58,12 @@
           ref="cpf"
           autocomplete="nope"
           minlength="14"
+          maxlength="14"
           required="required"
           :placeholder="translations.translation('cpfInputPlaceholder')"
           v-model="cpf"
           v-imask="cpfMask"
-          :class="{ 'has-errors': invalidCpf }"
+          :class="{ 'has-errors': invalidCpf, 'is--blocked': blockedForm }"
         />
       </div>
       <div class="form__field flex">
@@ -58,11 +73,12 @@
           id="postalCode-input"
           autocomplete="nope"
           minlength="9"
+          maxlength="9"
           required="required"
           :placeholder="translations.translation('postalCodeInputPlaceholder')"
           v-model="postalCode"
           v-imask="postalCodeMask"
-          :class="{ 'is--blocked': blockStateAndCities }"
+          :class="{ 'is--blocked': blockStateAndCities || blockedForm }"
         />
       </div>
       <div class="form__field flex">
@@ -74,6 +90,7 @@
           v-model="street"
           required="required"
           autocomplete="nope"
+          :class="{ 'is--blocked': blockedForm }"
         />
       </div>
       <div class="form__field flex">
@@ -85,6 +102,7 @@
           :placeholder="translations.translation('streetNumberInputPlaceholder')"
           v-model="streetNumber"
           autocomplete="nope"
+          :class="{ 'is--blocked': blockedForm }"
         />
       </div>
       <div class="form__field flex">
@@ -94,14 +112,19 @@
           v-if="states.length > 0"
           v-model="state"
           required="required"
-          :class="{ 'is--blocked': blockStateAndCities }"
+          :class="{ 'is--blocked': blockStateAndCities || blockedForm }"
         >
           <option value="">{{ translations.translation("stateSelectPlaceholder") }}</option>
           <option v-for="state in states" :key="state.id" :data-id="state.id" :value="state.sigla">
             {{ state.nome }}
           </option>
         </select>
-        <select id="state-select" v-else required="required" :class="{ 'is--blocked': blockStateAndCities }">
+        <select
+          id="state-select"
+          v-else
+          required="required"
+          :class="{ 'is--blocked': blockStateAndCities || blockedForm }"
+        >
           <option value="">{{ translations.translation("stateSelectPlaceholder") }}</option>
         </select>
       </div>
@@ -112,19 +135,24 @@
           required="required"
           v-if="cities.length > 0"
           v-model="city"
-          :class="{ 'is--blocked': blockStateAndCities }"
+          :class="{ 'is--blocked': blockStateAndCities || blockedForm }"
         >
           <option value="">{{ translations.translation("citySelectPlaceholder") }}</option>
           <option v-for="city in cities" :key="city.id" :value="city.nome">
             {{ city.nome }}
           </option>
         </select>
-        <select id="city-select" v-else required="required" :class="{ 'is--blocked': blockStateAndCities }">
+        <select
+          id="city-select"
+          v-else
+          required="required"
+          :class="{ 'is--blocked': blockStateAndCities || blockedForm }"
+        >
           <option value="">{{ translations.translation("citySelectPlaceholder") }}</option>
         </select>
       </div>
       <div class="form__actions flex">
-        <button type="submit" class="form__send-btn">Cadastrar</button>
+        <button type="submit" class="form__send-btn" :class="{ 'is--blocked': blockedForm }">Cadastrar</button>
       </div>
     </form>
   </section>
@@ -135,8 +163,8 @@ import { IMaskDirective } from "vue-imask";
 
 import Translations from "@/translations";
 import translationsData from "./translations.json";
-import validCpf from "@utils/valid-cpf";
-import { queryAddressByPostalCode, getStates, getStateCities } from "./requests";
+import { queryAddressByPostalCode, getStates, getStateCities, sendValidateCpf, sendRegister } from "./requests";
+import { InvalidCpfError, SendRegisterError } from "./errors";
 import "./register-form.scss";
 
 const translations = new Translations(translationsData);
@@ -154,7 +182,8 @@ function getStateIdBySigla(sigla, states) {
 export default {
   data() {
     return {
-      name: "",
+      completeName: "",
+      email: "",
       birthDate: "",
       invalidBirthDate: false,
       birthDateMask: {
@@ -179,9 +208,16 @@ export default {
       stateId: -1,
       cities: [],
       blockStateAndCities: false,
+      blockedForm: false,
     };
   },
   watch: {
+    cpf() {
+      this.invalidCpf = false;
+    },
+    birthDate() {
+      this.invalidBirthDate = false;
+    },
     state() {
       if (this.blockStateAndCities) {
         return;
@@ -240,8 +276,8 @@ export default {
 
       this.cities = cities;
     },
-    validBirthDate(birthDate) {
-      const birthDateSplit = birthDate.split("/");
+    validBirthDate() {
+      const birthDateSplit = this.birthDate.split("/");
 
       const aux = birthDateSplit[0];
       birthDateSplit[0] = birthDateSplit[1];
@@ -254,35 +290,65 @@ export default {
     registerFormSubmit(event) {
       event.preventDefault();
 
+      this.register();
+    },
+    formatBirthDate() {
+      return this.birthDate.split("/").reverse().join("-");
+    },
+    async register() {
+      this.blockForm = true;
+
       const data = {
-        name: this.name,
-        birthDate: this.birthDate,
-        gender: this.gender,
+        nomeCompleto: this.completeName,
+        dataNascimento: this.formatBirthDate(),
+        sexo: this.gender,
         cpf: this.cpf.replace(/\D/gim, ""),
-        street: this.street,
-        streetNumber: this.streetNumber,
-        postalCode: this.postalCode,
-        state: this.state,
-        city: this.city,
+        logradouro: this.street,
+        numeroLogradouro: this.streetNumber,
+        cep: this.postalCode.replace(/\D/gim, ""),
+        uf: this.state,
+        cidade: this.city,
+        email: this.email,
       };
 
-      if (!this.validBirthDate(data.birthDate)) {
+      if (!this.validBirthDate()) {
         this.invalidBirthDate = true;
         alert(translations.translation("invalidBirthDateWarning"));
+        this.blockForm = false;
         this.$refs.birthDate.focus();
-        return false;
+        return;
       }
 
-      if (!validCpf(data.cpf)) {
-        this.invalidCpf = true;
-        alert(translations.translation("invalidCpfWarning"));
+      try {
+        await sendValidateCpf(data.cpf);
+      } catch (error) {
+        if (error instanceof InvalidCpfError) {
+          this.invalidCpf = true;
+          alert(error.message);
+        } else {
+          console.error(error);
+        }
+
+        this.blockForm = false;
         this.$refs.cpf.focus();
-        return false;
+        return;
       }
 
-      alert(translations.translation("successFormMessage"));
+      try {
+        const responseBody = await sendRegister(data);
 
-      console.log(data);
+        alert(responseBody.message);
+      } catch (error) {
+        if (error instanceof SendRegisterError) {
+          alert(error.message);
+        } else {
+          console.error(error);
+        }
+      }
+
+      this.blockForm = false;
+
+      document.location.reload();
     },
   },
   directives: {

@@ -17,7 +17,8 @@
       border-radius: 3px;
       flex-direction: column;
 
-      input[type="text"] {
+      input[type="text"],
+      input[type="email"] {
         width: 100%;
         height: auto;
         background: #fff;
@@ -110,6 +111,11 @@
         font-size: 15px;
         line-height: 19px;
         font-weight: 400;
+
+        &.is--blocked {
+          pointer-events: none;
+          opacity: .4;
+        }
       }
     }
   }

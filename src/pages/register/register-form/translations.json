@@ -2,6 +2,8 @@
   "pt": {
     "nameInputLabel": "Nome completo:",
     "nameInputPlaceholder": "Nome completo",
+    "emailInputLabel": "E-mail",
+    "emailInputPlaceholder": "Endereço de email",
     "birthDateInputLabel": "Data de nascimento:",
     "birthDateInputPlaceholder": "__/__/____",
     "genderSelectLabel": "Gênero:",
@@ -18,8 +20,6 @@
     "stateSelectPlaceholder": "Selecione o estado",
     "citySelectLabel": "Cidade:",
     "citySelectPlaceholder": "Selecione a cidade",
-    "invalidBirthDateWarning": "Data de nascimento não é válida",
-    "invalidCpfWarning": "CPF não é válido",
-    "successFormMessage": "Solicitação de cadastro enviada com sucesso"
+    "invalidBirthDateWarning": "Data de nascimento não é válida"
   }
 }
