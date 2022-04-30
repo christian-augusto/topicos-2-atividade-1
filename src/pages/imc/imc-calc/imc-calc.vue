@@ -30,9 +30,6 @@
         <button type="submit" class="form__send-btn">Calcular</button>
       </div>
       <div class="form__result flex">
-        <p>{{ imc }}</p>
-      </div>
-      <div class="form__result flex">
         <p>{{ classification }}</p>
       </div>
     </form>
@@ -42,43 +39,31 @@
 <script>
 import Translations from "@/translations";
 import translationsData from "./translations.json";
+import { sendCalcImc } from "./requests";
 import "./imc-calc.scss";
 
 const translations = new Translations(translationsData);
-const IMC_FIRST_CLASS_SEP = 18.5;
-const IMC_SECOND_CLASS_SEP = 24.9;
-const IMC_THIRD_CLASS_SEP = 29.9;
-const IMC_FOURTH_CLASS_SEP = 39.9;
 
 export default {
   data() {
     return {
       weight: "",
       height: "",
-      imc: "",
       classification: "",
       translations,
     };
   },
   methods: {
-    calcImc() {
+    async calcImc() {
       const height = Number(this.height) / 100;
       const weight = Number(this.weight);
 
-      const imc = (weight / (height * height)).toFixed(1);
+      const responseBody = await sendCalcImc(height, weight);
 
-      this.imc = `${imc}`;
-
-      if (imc < IMC_FIRST_CLASS_SEP) {
-        this.classification = translations.translation("imcFirstClass");
-      } else if (imc < IMC_SECOND_CLASS_SEP) {
-        this.classification = translations.translation("imcSecondClass");
-      } else if (imc < IMC_THIRD_CLASS_SEP) {
-        this.classification = translations.translation("imcThirdClass");
-      } else if (imc < IMC_FOURTH_CLASS_SEP) {
-        this.classification = translations.translation("imcFourthClass");
+      if (responseBody == null) {
+        this.classification = translations.translation("imcCalcError");
       } else {
-        this.classification = translations.translation("imcFifthClass");
+        this.classification = responseBody.message;
       }
     },
     imcCalcFormSubmit(event) {
@@ -89,7 +74,6 @@ export default {
     cleanForm() {
       this.weight = "";
       this.height = "";
-      this.imc = "";
       this.classification = "";
     },
   },

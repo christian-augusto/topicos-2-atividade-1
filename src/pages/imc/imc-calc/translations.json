@@ -4,10 +4,6 @@
     "weightInputPlaceholder": "80",
     "heightInputLabel": "Altura (cm):",
     "heightInputPlaceholder": "150",
-    "imcFirstClass": "Classificação: MAGREZA",
-    "imcSecondClass": "Classificação: NORMAL",
-    "imcThirdClass": "Classificação: SOBREPESO",
-    "imcFourthClass": "Classificação: OBESIDADE",
-    "imcFifthClass": "Classificação: OBESIDADE GRAVE"
+    "imcCalcError": "Erro ao calcular o IMC"
   }
 }
