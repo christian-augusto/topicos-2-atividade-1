@@ -26,6 +26,11 @@
       font-size: 15px;
       line-height: 19px;
       font-weight: 400;
+
+      &.is--blocked {
+        pointer-events: none;
+        opacity: .4;
+      }
     }
 
     label {
@@ -71,6 +76,11 @@
       font-size: 15px;
       line-height: 19px;
       font-weight: 400;
+
+      &.is--blocked {
+        pointer-events: none;
+        opacity: .4;
+      }
     }
 
     &__send-btn {
@@ -89,6 +99,11 @@
       line-height: 19px;
       font-weight: 400;
       margin: 0 0 0 10px;
+
+      &.is--blocked {
+        pointer-events: none;
+        opacity: .4;
+      }
     }
 
     &__result {

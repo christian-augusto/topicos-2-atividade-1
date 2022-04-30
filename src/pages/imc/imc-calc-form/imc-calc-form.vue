@@ -11,6 +11,7 @@
           required="required"
           :placeholder="translations.translation('weightInputPlaceholder')"
           v-model="weight"
+          :class="{ 'is--blocked': blockedForm }"
         />
       </div>
       <div class="form__field flex">
@@ -23,11 +24,14 @@
           required="required"
           :placeholder="translations.translation('heightInputPlaceholder')"
           v-model="height"
+          :class="{ 'is--blocked': blockedForm }"
         />
       </div>
       <div class="form__actions flex">
-        <button type="button" class="form__clean-btn" @click="cleanForm">Limpar</button>
-        <button type="submit" class="form__send-btn">Calcular</button>
+        <button type="button" class="form__clean-btn" @click="cleanForm" :class="{ 'is--blocked': blockedForm }">
+          Limpar
+        </button>
+        <button type="submit" class="form__send-btn" :class="{ 'is--blocked': blockedForm }">Calcular</button>
       </div>
       <div class="form__result flex">
         <p>{{ classification }}</p>
@@ -40,7 +44,7 @@
 import Translations from "@/translations";
 import translationsData from "./translations.json";
 import { sendCalcImc } from "./requests";
-import "./imc-calc.scss";
+import "./imc-calc-form.scss";
 
 const translations = new Translations(translationsData);
 
@@ -51,10 +55,13 @@ export default {
       height: "",
       classification: "",
       translations,
+      blockedForm: false,
     };
   },
   methods: {
     async calcImc() {
+      this.blockedForm = true;
+
       const height = Number(this.height) / 100;
       const weight = Number(this.weight);
 
@@ -65,6 +72,8 @@ export default {
       } else {
         this.classification = responseBody.message;
       }
+
+      this.blockedForm = false;
     },
     imcCalcFormSubmit(event) {
       event.preventDefault();
