@@ -1,7 +1,7 @@
 {
   "pt": {
-    "nameInputLabel": "Nome completo:",
-    "nameInputPlaceholder": "Nome completo",
+    "completeNameInputLabel": "Nome completo:",
+    "completeNameInputPlaceholder": "Nome completo",
     "emailInputLabel": "E-mail",
     "emailInputPlaceholder": "Endereço de email",
     "birthDateInputLabel": "Data de nascimento:",
@@ -20,6 +20,7 @@
     "stateSelectPlaceholder": "Selecione o estado",
     "citySelectLabel": "Cidade:",
     "citySelectPlaceholder": "Selecione a cidade",
+    "acceptedTermsInputLabel": "Aceitar termos de uso",
     "invalidBirthDateWarning": "Data de nascimento não é válida"
   }
 }

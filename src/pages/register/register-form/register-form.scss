@@ -83,6 +83,11 @@
         flex-direction: column;
         justify-content: flex-start;
 
+        &#acceptedTerms-wrapper {
+          justify-content: space-between;
+          flex-direction: row;
+        }
+
         &:first-child {
           margin: 0;
         }

@@ -151,8 +151,21 @@
           <option value="">{{ translations.translation("citySelectPlaceholder") }}</option>
         </select>
       </div>
+      <div class="form__field flex" id="acceptedTerms-wrapper">
+        <label for="acceptedTerms-input">{{ translations.translation("acceptedTermsInputLabel") }}</label>
+        <input
+          type="checkbox"
+          id="acceptedTerms-input"
+          autocomplete="nope"
+          required="required"
+          v-model="acceptedTerms"
+          :class="{ 'is--blocked': blockedForm }"
+        />
+      </div>
       <div class="form__actions flex">
-        <button type="submit" class="form__send-btn" :class="{ 'is--blocked': blockedForm }">Cadastrar</button>
+        <button type="submit" class="form__send-btn" :class="{ 'is--blocked': blockedForm || !acceptedTerms }">
+          Cadastrar
+        </button>
       </div>
     </form>
   </section>
@@ -209,6 +222,7 @@ export default {
       cities: [],
       blockStateAndCities: false,
       blockedForm: false,
+      acceptedTerms: false,
     };
   },
   watch: {
