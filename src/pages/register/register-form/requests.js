@@ -1,4 +1,4 @@
-import { InvalidCpfError, InvalidFieldRegisterForm, GenericRegisterFormError } from "./errors";
+import { InvalidFieldRegisterForm, GenericRegisterFormError, InvalidCpfError, CpfAlreadyExistsError } from "./errors";
 import Translations from "@/translations";
 import translationsData from "./translations.json";
 
@@ -24,42 +24,6 @@ export async function queryAddressByPostalCode(postalCode) {
   }
 }
 
-export async function getStates() {
-  const url = "https://servicodados.ibge.gov.br/api/v1/localidades/estados";
-
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: new Headers({
-        Accept: "application/json",
-      }),
-    });
-
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-}
-
-export async function getStateCities(stateId) {
-  const url = `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${stateId}/distritos`;
-
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: new Headers({
-        Accept: "application/json",
-      }),
-    });
-
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-}
-
 export async function sendValidateCpf(cpf) {
   const url = `https://app.professordaniloalves.com.br/api/v1/cadastro/validar/documento/${cpf}`;
 
@@ -72,8 +36,12 @@ export async function sendValidateCpf(cpf) {
 
   const responseBody = await response.json();
 
-  if ([400, 412].includes(response.status)) {
+  if (response.status === 400) {
     throw new InvalidCpfError(responseBody.message);
+  }
+
+  if (response.status === 412) {
+    throw new CpfAlreadyExistsError(responseBody.message);
   }
 }
 
@@ -95,11 +63,58 @@ export async function sendRegister(data) {
     throw new InvalidFieldRegisterForm(JSON.stringify(responseBody));
   }
 
-  if (parseInt(response.status / 100) === 4) {
-    throw new GenericRegisterFormError(
-      responseBody.message || translations.translation("invalidBirthDateErrorMessage"),
-    );
+  if ([4, 5].includes(parseInt(response.status / 100))) {
+    throw new GenericRegisterFormError(responseBody.message || translations.translation("formErrorMessage"));
   }
 
   return responseBody;
+}
+
+export async function sendEditRegister(data) {
+  const url = "https://app.professordaniloalves.com.br/api/v1/cadastro";
+
+  const response = await fetch(url, {
+    method: "PUT",
+    headers: new Headers({
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    }),
+    body: JSON.stringify(data),
+  });
+
+  const responseBody = await response.json();
+
+  if (response.status === 422) {
+    throw new InvalidFieldRegisterForm(JSON.stringify(responseBody));
+  }
+
+  if ([4, 5].includes(parseInt(response.status / 100))) {
+    throw new GenericRegisterFormError(responseBody.message || translations.translation("formErrorMessage"));
+  }
+
+  return responseBody;
+}
+
+export async function sendDeleteByCpf(cpf) {
+  const url = `https://app.professordaniloalves.com.br/api/v1/cadastro/${cpf}`;
+
+  await fetch(url, {
+    method: "DELETE",
+    headers: new Headers({
+      Accept: "application/json",
+    }),
+  });
+}
+
+export async function sendGetRegister(cpf) {
+  const url = `https://app.professordaniloalves.com.br/api/v1/cadastro/${cpf}`;
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: new Headers({
+      Accept: "application/json",
+    }),
+  });
+
+  return await response.json();
 }

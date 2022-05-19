@@ -138,6 +138,85 @@
           opacity: .4;
         }
       }
+
+      &__confirmation-modal {
+        position: fixed;
+        width: 500px;
+        height: 250px;
+        background: #fff;
+        top: 50%;
+        left: 50%;
+        z-index: $absoluteZIndex;
+        @include transform(translate(-50%, -50%));
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 3px;
+
+        &:not(.is--active) {
+          display: none;
+        }
+
+        &__text {
+          font-family: $default-font;
+          color: #000;
+          font-size: 16px;
+          line-height: 18px;
+          font-weight: 400;
+          text-align: justify;
+        }
+
+        &__actions {
+          margin: 20px 0 0;
+        }
+
+        &__edit-btn,
+        &__delete-btn {
+          @include remove-appearance;
+          display: block;
+          width: 100%;
+          height: auto;
+          box-sizing: border-box;
+          padding: 8px 13px;
+          cursor: pointer;
+          border-radius: 3px;
+          border: none;
+          font-family: $default-font;
+          font-size: 15px;
+          line-height: 19px;
+          font-weight: 400;
+
+          &.is--blocked {
+            pointer-events: none;
+            opacity: .4;
+          }
+        }
+
+        &__edit-btn {
+          background: rgb(255, 136, 0);
+        }
+
+        &__delete-btn {
+          background: rgb(229, 255, 0);
+          margin: 0 0 0 10px;
+        }
+      }
+
+      &__confirmation-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: block;
+        background: #000;
+        width: 100%;
+        height: 100%;
+        z-index: $absoluteZIndex - 1;
+        opacity: 0.6;
+
+        &:not(.is--active) {
+          display: none;
+        }
+      }
     }
   }
 }

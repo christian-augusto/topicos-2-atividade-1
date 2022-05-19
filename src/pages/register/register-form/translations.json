@@ -1,9 +1,9 @@
 {
   "pt": {
     "completeNameInputLabel": "Nome completo:",
-    "completeNameInputPlaceholder": "Nome completo",
+    "completeNameInputPlaceholder": "",
     "emailInputLabel": "E-mail",
-    "emailInputPlaceholder": "Endereço de email",
+    "emailInputPlaceholder": "",
     "birthDateInputLabel": "Data de nascimento:",
     "birthDateInputPlaceholder": "__/__/____",
     "genderSelectLabel": "Gênero:",
@@ -16,12 +16,13 @@
     "streetNumberInputPlaceholder": "",
     "postalCodeInputLabel": "CEP:",
     "postalCodeInputPlaceholder": "",
-    "stateSelectLabel": "Estado:",
-    "stateSelectPlaceholder": "Selecione o estado",
-    "citySelectLabel": "Cidade:",
-    "citySelectPlaceholder": "Selecione a cidade",
+    "stateInputLabel": "Estado:",
+    "stateInputPlaceholder": "",
+    "cityInputLabel": "Cidade:",
+    "cityInputPlaceholder": "",
     "acceptedTermsInputLabel": "Aceitar termos de uso",
     "invalidBirthDateErrorMessage": "Data de nascimento não é válida",
-    "registerFormErrorMessage": "Houve um erro ao tentar realizar o cadastro"
+    "formErrorMessage": "Houve um erro ao tentar realizar o cadastro",
+    "confirmationModalText": "CPF já cadastrado, escolha uma opção:"
   }
 }

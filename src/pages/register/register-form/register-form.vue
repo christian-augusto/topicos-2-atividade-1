@@ -81,7 +81,7 @@
           :placeholder="translations.translation('postalCodeInputPlaceholder')"
           v-model="postalCode"
           v-imask="postalCodeMask"
-          :class="{ 'is--blocked': blockStateAndCities || blockedForm }"
+          :class="{ 'is--blocked': blockedForm }"
         />
         <p class="form__field__error-message">{{ postalCodeError }}</p>
       </div>
@@ -112,50 +112,30 @@
         <p class="form__field__error-message">{{ streetNumberError }}</p>
       </div>
       <div class="form__field flex">
-        <label for="state-select">{{ translations.translation("stateSelectLabel") }}</label>
-        <select
-          id="state-select"
-          v-if="states.length > 0"
+        <label for="state-input">{{ translations.translation("stateInputLabel") }}</label>
+        <input
+          type="text"
+          id="state-input"
+          autocomplete="nope"
+          required="required"
+          :placeholder="translations.translation('stateInputPlaceholder')"
           v-model="state"
-          required="required"
-          :class="{ 'is--blocked': blockStateAndCities || blockedForm }"
-        >
-          <option value="">{{ translations.translation("stateSelectPlaceholder") }}</option>
-          <option v-for="state in states" :key="state.id" :data-id="state.id" :value="state.sigla">
-            {{ state.nome }}
-          </option>
-        </select>
-        <select
-          id="state-select"
-          v-else
-          required="required"
-          :class="{ 'is--blocked': blockStateAndCities || blockedForm }"
-        >
-          <option value="">{{ translations.translation("stateSelectPlaceholder") }}</option>
-        </select>
+          :class="{ 'has-errors': invalidState, 'is--blocked': blockedForm }"
+        />
+        <p class="form__field__error-message">{{ stateError }}</p>
       </div>
       <div class="form__field flex">
-        <label for="city-select">{{ translations.translation("citySelectLabel") }}</label>
-        <select
-          id="city-select"
+        <label for="city-input">{{ translations.translation("cityInputLabel") }}</label>
+        <input
+          type="text"
+          id="city-input"
+          autocomplete="nope"
           required="required"
-          v-if="cities.length > 0"
+          :placeholder="translations.translation('cityInputPlaceholder')"
           v-model="city"
-          :class="{ 'is--blocked': blockStateAndCities || blockedForm }"
-        >
-          <option value="">{{ translations.translation("citySelectPlaceholder") }}</option>
-          <option v-for="city in cities" :key="city.id" :value="city.nome">
-            {{ city.nome }}
-          </option>
-        </select>
-        <select
-          id="city-select"
-          v-else
-          required="required"
-          :class="{ 'is--blocked': blockStateAndCities || blockedForm }"
-        >
-          <option value="">{{ translations.translation("citySelectPlaceholder") }}</option>
-        </select>
+          :class="{ 'has-errors': invalidCity, 'is--blocked': blockedForm }"
+        />
+        <p class="form__field__error-message">{{ cityError }}</p>
       </div>
       <div class="form__field flex" id="acceptedTerms-wrapper">
         <label for="acceptedTerms-input">{{ translations.translation("acceptedTermsInputLabel") }}</label>
@@ -173,6 +153,16 @@
           Cadastrar
         </button>
       </div>
+      <div class="form__confirmation-modal-overlay" :class="{ 'is--active': confirmationModalIsActive }"></div>
+      <div class="form__confirmation-modal flex" :class="{ 'is--active': confirmationModalIsActive }">
+        <p class="form__confirmation-modal__text">{{ translations.translation("confirmationModalText") }}</p>
+        <div class="form__confirmation-modal__actions flex">
+          <button type="button" class="form__confirmation-modal__edit-btn" @click="editRegisterClick">Editar</button>
+          <button type="button" class="form__confirmation-modal__delete-btn" @click="deleteRegisterClick">
+            Excluir
+          </button>
+        </div>
+      </div>
     </form>
   </section>
 </template>
@@ -182,21 +172,18 @@ import { IMaskDirective } from "vue-imask";
 
 import Translations from "@/translations";
 import translationsData from "./translations.json";
-import { queryAddressByPostalCode, getStates, getStateCities, sendRegister } from "./requests";
-import { InvalidFieldRegisterForm, GenericRegisterFormError } from "./errors";
+import {
+  queryAddressByPostalCode,
+  sendRegister,
+  sendValidateCpf,
+  sendDeleteByCpf,
+  sendGetRegister,
+  sendEditRegister,
+} from "./requests";
+import { InvalidFieldRegisterForm, GenericRegisterFormError, InvalidCpfError, CpfAlreadyExistsError } from "./errors";
 import "./register-form.scss";
 
 const translations = new Translations(translationsData);
-
-function getStateIdBySigla(sigla, states) {
-  for (let i = 0; i < states.length; i++) {
-    if (states[i].sigla == sigla) {
-      return states[i].id;
-    }
-  }
-
-  return -1;
-}
 
 export default {
   data() {
@@ -241,8 +228,12 @@ export default {
       invalidStreetNumber: false,
 
       state: "",
+      stateError: "",
+      invalidState: false,
 
       city: "",
+      cityError: "",
+      invalidCity: false,
 
       acceptedTerms: false,
 
@@ -250,8 +241,14 @@ export default {
       states: [],
       stateId: -1,
       cities: [],
-      blockStateAndCities: false,
       blockedForm: false,
+
+      confirmationModalIsActive: false,
+      blockedConfirmationModal: false,
+
+      cachedRegisterId: null,
+
+      setAddressActive: true,
     };
   },
   watch: {
@@ -270,19 +267,17 @@ export default {
     cpf() {
       this.cpfError = "";
       this.invalidCpf = false;
-    },
-    state() {
-      if (this.blockStateAndCities) {
-        return;
-      }
-
-      this.stateId = getStateIdBySigla(this.state, this.states);
-      this.setCities();
+      this.validCpf();
     },
     postalCode() {
       this.postalCodeError = "";
       this.invalidPostalCode = false;
-      this.setStreetByPostalCode();
+
+      const self = this;
+
+      Promise.all([this.setAddressByPostalCode()]).then(function () {
+        self.activeSetAddress();
+      });
     },
     street() {
       this.streetError = "";
@@ -292,52 +287,34 @@ export default {
       this.streetNumberError = "";
       this.invalidStreetNumber = false;
     },
-  },
-  mounted() {
-    this.setStates();
+    state() {
+      this.stateError = "";
+      this.invalidState = false;
+    },
+    city() {
+      this.cityError = "";
+      this.invalidCity = false;
+    },
   },
   methods: {
-    async setStreetByPostalCode() {
-      if (this.postalCode.length != 9) {
+    async setAddressByPostalCode() {
+      if (this.postalCode.length != 9 || !this.setAddressActive) {
         return;
       }
 
-      this.blockStateAndCities = true;
+      this.blockForm();
 
       const address = await queryAddressByPostalCode(this.postalCode);
 
       if (address === null) {
-        this.blockStateAndCities = false;
         return;
       }
 
       this.street = address.logradouro;
       this.state = address.uf;
-
-      this.stateId = getStateIdBySigla(this.state, this.states);
-      await this.setCities();
-
       this.city = address.localidade;
 
-      this.blockStateAndCities = false;
-    },
-    async setStates() {
-      const states = await getStates();
-
-      states.sort(function (a, b) {
-        return a.nome.localeCompare(b.nome);
-      });
-
-      this.states = states;
-    },
-    async setCities() {
-      const cities = await getStateCities(this.stateId);
-
-      cities.sort(function (a, b) {
-        return a.nome.localeCompare(b.nome);
-      });
-
-      this.cities = cities;
+      this.unblockForm();
     },
     validBirthDate() {
       const birthDateSplit = this.birthDate.split("/");
@@ -350,13 +327,23 @@ export default {
 
       return date instanceof Date && !isNaN(date);
     },
-    registerFormSubmit(event) {
-      event.preventDefault();
-
-      this.register();
-    },
     formatBirthDate() {
       return this.birthDate.split("/").reverse().join("-");
+    },
+    revertBirthDate(birthDate) {
+      return birthDate.split("-").reverse().join("/");
+    },
+    formatCpf() {
+      return this.cpf.replace(/\D/gim, "");
+    },
+    revertCpf(cpf) {
+      return `${cpf.substring(0, 3)}.${cpf.substring(3, 6)}.${cpf.substring(6, 9)}-${cpf.substring(9, 11)}`;
+    },
+    formatPostalCode() {
+      return this.postalCode.replace(/\D/gim, "");
+    },
+    revertPostalCode(postalCode) {
+      return `${postalCode.substring(0, 5)}-${postalCode.substring(5)}`;
     },
     resetForm() {
       this.completeName = "";
@@ -371,92 +358,212 @@ export default {
       this.email = "";
       this.acceptedTerms = false;
     },
+    blockForm() {
+      this.blockedForm = true;
+    },
+    unblockForm() {
+      this.blockedForm = false;
+    },
+    blockConfirmationModal() {
+      this.blockedConfirmationModal = true;
+    },
+    unblockConfirmationModal() {
+      this.blockedConfirmationModal = false;
+    },
+    activeConfirmationModal() {
+      this.confirmationModalIsActive = true;
+    },
+    disableConfirmationModal() {
+      this.confirmationModalIsActive = false;
+    },
+    activeSetAddress() {
+      this.setAddressActive = true;
+    },
+    disableSetAddress() {
+      this.setAddressActive = false;
+    },
+    editRegisterClick(ev) {
+      ev.preventDefault();
+
+      this.editRegister();
+    },
+    async editRegister() {
+      this.blockConfirmationModal();
+
+      let register = null;
+
+      try {
+        register = await sendGetRegister(this.formatCpf());
+      } catch (error) {
+        console.error(error);
+      }
+
+      if (register) {
+        this.disableSetAddress();
+
+        this.completeName = register.nomeCompleto;
+        this.email = register.email;
+        this.birthDate = this.revertBirthDate(register.dataNascimento);
+        this.gender = register.sexo;
+        this.cpf = this.revertCpf(register.cpf);
+        this.postalCode = this.revertPostalCode(register.cep);
+        this.street = register.logradouro;
+        this.streetNumber = register.numeroLogradouro;
+        this.state = register.uf;
+        this.city = register.cidade;
+
+        this.cachedRegisterId = register.id;
+      }
+
+      this.unblockForm();
+      this.disableConfirmationModal();
+      this.unblockConfirmationModal();
+    },
+    deleteRegisterClick(ev) {
+      ev.preventDefault();
+
+      this.deleteRegister();
+    },
+    async deleteRegister() {
+      this.blockConfirmationModal();
+
+      try {
+        await sendDeleteByCpf(this.formatCpf());
+      } catch (error) {
+        console.error(error);
+      }
+
+      this.unblockForm();
+      this.disableConfirmationModal();
+      this.unblockConfirmationModal();
+    },
+    async validCpf() {
+      if (this.cpf.length != 14) {
+        return;
+      }
+
+      this.blockForm();
+
+      try {
+        await sendValidateCpf(this.formatCpf());
+
+        this.unblockForm();
+      } catch (error) {
+        if (error instanceof InvalidCpfError) {
+          this.cpfError = error.message;
+          this.invalidCpf = true;
+        } else if (error instanceof CpfAlreadyExistsError) {
+          this.activeConfirmationModal();
+        } else {
+          console.error(error);
+        }
+
+        this.$refs.cpf.focus();
+      }
+    },
+    registerFormSubmit(ev) {
+      ev.preventDefault();
+
+      this.register();
+    },
+    setFieldsErrors(responseBody) {
+      if (responseBody.errors.nomeCompleto) {
+        this.completeNameError = responseBody.message;
+        this.invalidCompleteName = true;
+      }
+
+      if (responseBody.errors.email) {
+        this.emailError = responseBody.message;
+        this.invalidEmail = true;
+      }
+
+      if (responseBody.errors.dataNascimento) {
+        this.birthDateError = responseBody.message;
+        this.invalidBirthDate = true;
+      }
+
+      if (responseBody.errors.cpf) {
+        this.cpfError = responseBody.message;
+        this.invalidCpf = true;
+      }
+
+      if (responseBody.errors.cep) {
+        this.postalCodeError = responseBody.message;
+        this.invalidPostalCode = true;
+      }
+
+      if (responseBody.errors.logradouro) {
+        this.streetError = responseBody.message;
+        this.invalidStreet = true;
+      }
+
+      if (responseBody.errors.numeroLogradouro) {
+        this.streetNumberError = responseBody.message;
+        this.invalidStreetNumber = true;
+      }
+
+      if (responseBody.errors.uf) {
+        this.stateError = responseBody.message;
+        this.invalidState = true;
+      }
+
+      if (responseBody.errors.cidade) {
+        this.cityError = responseBody.message;
+        this.invalidCity = true;
+      }
+    },
     async register() {
-      this.blockForm = true;
+      this.blockForm();
 
       const data = {
         nomeCompleto: this.completeName,
+        email: this.email,
         dataNascimento: this.formatBirthDate(),
         sexo: this.gender,
-        cpf: this.cpf.replace(/\D/gim, ""),
+        cpf: this.formatCpf(),
+        cep: this.postalCode.replace(/\D/gim, ""),
         logradouro: this.street,
         numeroLogradouro: this.streetNumber,
-        cep: this.postalCode.replace(/\D/gim, ""),
         uf: this.state,
         cidade: this.city,
-        email: this.email,
       };
+
+      if (this.cachedRegisterId) {
+        data.id = this.cachedRegisterId;
+      }
 
       if (!this.validBirthDate()) {
         this.birthDateError = translations.translation("invalidBirthDateErrorMessage");
         this.invalidBirthDate = true;
-        this.blockForm = false;
+        this.unblockForm();
         this.$refs.birthDate.focus();
         return;
       }
 
-      // try {
-      //   await sendValidateCpf(data.cpf);
-      // } catch (error) {
-      //   if (error instanceof InvalidCpfError) {
-      //     this.invalidCpf = true;
-      //     alert(error.message);
-      //   } else {
-      //     console.error(error);
-      //   }
+      let sendForm = sendRegister;
 
-      //   this.blockForm = false;
-      //   this.$refs.cpf.focus();
-      //   return;
-      // }
+      if (this.cachedRegisterId) {
+        sendForm = sendEditRegister;
+      }
 
       try {
-        const responseBody = await sendRegister(data);
+        const responseBody = await sendForm(data);
 
         alert(responseBody.message);
 
         this.resetForm();
+        this.cachedRegisterId = null;
       } catch (error) {
         if (error instanceof GenericRegisterFormError) {
           alert(error.message);
         } else if (error instanceof InvalidFieldRegisterForm) {
           const responseBody = JSON.parse(error.message);
 
-          if (responseBody.errors.nomeCompleto) {
-            this.completeNameError = responseBody.message;
-            this.invalidCompleteName = true;
-          }
-
-          if (responseBody.errors.email) {
-            this.emailError = responseBody.message;
-            this.invalidEmail = true;
-          }
-
-          if (responseBody.errors.dataNascimento) {
-            this.birthDateError = responseBody.message;
-            this.invalidBirthDate = true;
-          }
-
-          if (responseBody.errors.cpf) {
-            this.cpfError = responseBody.message;
-            this.invalidCpf = true;
-          }
-
-          if (responseBody.errors.logradouro) {
-            this.streetError = responseBody.message;
-            this.invalidStreet = true;
-          }
-
-          if (responseBody.errors.numeroLogradouro) {
-            this.streetNumberError = responseBody.message;
-            this.invalidStreetNumber = true;
-          }
-        } else {
-          console.error(error);
+          this.setFieldsErrors(responseBody);
         }
       }
 
-      this.blockForm = false;
+      this.unblockForm();
     },
   },
   directives: {
