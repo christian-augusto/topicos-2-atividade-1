@@ -21,6 +21,7 @@
     "citySelectLabel": "Cidade:",
     "citySelectPlaceholder": "Selecione a cidade",
     "acceptedTermsInputLabel": "Aceitar termos de uso",
-    "invalidBirthDateWarning": "Data de nascimento não é válida"
+    "invalidBirthDateErrorMessage": "Data de nascimento não é válida",
+    "registerFormErrorMessage": "Houve um erro ao tentar realizar o cadastro"
   }
 }

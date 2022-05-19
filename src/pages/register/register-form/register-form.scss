@@ -91,6 +91,22 @@
         &:first-child {
           margin: 0;
         }
+
+        &__error-message {
+          width: 100%;
+          height: auto;
+          font-family: $default-font;
+          color: #f00;
+          font-size: 15px;
+          line-height: 18px;
+          font-weight: 400;
+          margin: 5px 0 0;
+          text-align: justify;
+
+          &:empty {
+            display: none;
+          }
+        }
       }
 
       &__actions {

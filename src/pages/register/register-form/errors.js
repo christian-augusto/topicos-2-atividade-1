@@ -4,7 +4,13 @@ export class InvalidCpfError extends Error {
   }
 }
 
-export class SendRegisterError extends Error {
+export class InvalidFieldRegisterForm extends Error {
+  constructor(message) {
+    super(message);
+  }
+}
+
+export class GenericRegisterFormError extends Error {
   constructor(message) {
     super(message);
   }

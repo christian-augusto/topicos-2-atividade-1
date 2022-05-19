@@ -1,4 +1,8 @@
-import { InvalidCpfError, SendRegisterError } from "./errors";
+import { InvalidCpfError, InvalidFieldRegisterForm, GenericRegisterFormError } from "./errors";
+import Translations from "@/translations";
+import translationsData from "./translations.json";
+
+const translations = new Translations(translationsData);
 
 export async function queryAddressByPostalCode(postalCode) {
   postalCode = postalCode.replace(/\D/gim, "");
@@ -87,8 +91,14 @@ export async function sendRegister(data) {
 
   const responseBody = await response.json();
 
-  if ([400, 412, 422].includes(response.status)) {
-    throw new SendRegisterError(responseBody.message);
+  if (response.status === 422) {
+    throw new InvalidFieldRegisterForm(JSON.stringify(responseBody));
+  }
+
+  if (parseInt(response.status / 100) === 4) {
+    throw new GenericRegisterFormError(
+      responseBody.message || translations.translation("invalidBirthDateErrorMessage"),
+    );
   }
 
   return responseBody;
